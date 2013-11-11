@@ -51,13 +51,13 @@ public class Problem2Driver {
     }
 
     public static void BooleanCapitalSearch(IndexSearcher is, QueryParser CapitalTextParser) throws IOException, ParseException {
-        File f = new File("/Users/joonhyunglim/Desktop/MSiA/MSiA490-2/Assignment3/Search_Result/BooleanQueryResult.txt");
+        File f = new File("C:/Users/Riles/Text3/Search_Result/BooleanQueryResult.txt");
         BufferedWriter writer = new BufferedWriter(new FileWriter(f));
 
         BooleanQuery bool = new BooleanQuery();
-        bool.add(new TermQuery(new Term("CapitalText", "Greek")), BooleanClause.Occur.MUST);
-        bool.add(new TermQuery(new Term("CapitalText", "Roman")), BooleanClause.Occur.MUST);
-        bool.add(new TermQuery(new Term("CapitalText", "Persian")), BooleanClause.Occur.MUST_NOT);
+        bool.add(new TermQuery(new Term("CapitalText", "dinosaur")), BooleanClause.Occur.MUST);
+        //bool.add(new TermQuery(new Term("CapitalText", "Roman")), BooleanClause.Occur.MUST);
+        //bool.add(new TermQuery(new Term("CapitalText", "Persian")), BooleanClause.Occur.MUST_NOT);
         System.out.println("Boolean =>\t"+bool.toString());
         Query query = CapitalTextParser.parse(bool.toString());
 
@@ -75,7 +75,7 @@ public class Problem2Driver {
         /* Brief introduction of Fuzzy Query and how it works.
          * http://developer4life.blogspot.com/2013/02/solr-and-lucene-fuzzy-search-closer-look.html
          */
-        File f = new File("/Users/joonhyunglim/Desktop/MSiA/MSiA490-2/Assignment3/Search_Result/FuzzyQueryResult.txt");
+        File f = new File("C:/Users/Riles/Text3/Search_Result/FuzzyQueryResult.txt");
         BufferedWriter writer = new BufferedWriter(new FileWriter(f));
 
         FuzzyQuery fuzz = new FuzzyQuery(new Term("CapitalText","Shakespeare"));
@@ -96,7 +96,7 @@ public class Problem2Driver {
         /* Brief introduction of Fuzzy Query and how it works.
          * http://developer4life.blogspot.com/2013/02/solr-and-lucene-fuzzy-search-closer-look.html
          */
-        File f = new File("/Users/joonhyunglim/Desktop/MSiA/MSiA490-2/Assignment3/Search_Result/PhraseQueryResult.txt");
+        File f = new File("C:/Users/Riles/Text3/Search_Result/PhraseQueryResult.txt");
         BufferedWriter writer = new BufferedWriter(new FileWriter(f));
 
         String SearchPhrase = "located below sea level";
@@ -121,7 +121,7 @@ public class Problem2Driver {
         /* Brief introduction of Numeric Range Query and how it works.
          * http://lucene.apache.org/core/4_3_0/core/org/apache/lucene/search/NumericRangeQuery.html
          */
-        File f = new File("/Users/joonhyunglim/Desktop/MSiA/MSiA490-2/Assignment3/Search_Result/NumericRangeQueryResult.txt");
+        File f = new File("C:/Users/Riles/Text3/Search_Result/NumericRangeQueryResult.txt");
         BufferedWriter writer = new BufferedWriter(new FileWriter(f));
 
         /*
