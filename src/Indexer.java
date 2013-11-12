@@ -2,6 +2,7 @@
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
@@ -33,15 +34,22 @@ public class Indexer {
         }
 
     public int index() {
+    	FieldType fieldType = new FieldType();
+		fieldType.setIndexed(true);
+		fieldType.setTokenized(true);
+		fieldType.setStored(true);
+		fieldType.setStoreTermVectors(true);
+		fieldType.setStoreTermVectorPositions(true);
+		fieldType.freeze();
         try {
             int size = store.getSize();
             for (int i=0; i< size; i++) {
                 Document doc = new Document();
-                doc.add(new StringField("Continent", store.getContinent(i), Field.Store.YES));
-                doc.add(new StringField("CountryName", store.getCountryName(i), Field.Store.YES));
-                doc.add(new StringField("CapitalName", store.getCapitalName(i), Field.Store.YES));
-                doc.add(new TextField("CountryText", store.getCountrytxt(i), Field.Store.YES));
-                doc.add(new TextField("CapitalText", store.getCapitalTxt(i), Field.Store.YES));
+                doc.add(new Field("Continent", store.getContinent(i), fieldType));
+                doc.add(new Field("CountryName", store.getCountryName(i), fieldType));
+                doc.add(new Field("CapitalName", store.getCapitalName(i), fieldType));
+                doc.add(new Field("CountryText", store.getCountrytxt(i), fieldType));
+                doc.add(new Field("CapitalText", store.getCapitalTxt(i), fieldType));
                 writer.addDocument(doc);
                 writer.commit();
             }
