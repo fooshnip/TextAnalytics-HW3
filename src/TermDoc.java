@@ -58,7 +58,7 @@ public class TermDoc {
 				Entry<String, Integer> entry = iter.next();
 				ArrayList<Integer> terms = docTermFreq.get(entry.getKey());
 				if(terms == null) {
-					ArrayList<Integer> newDocsRow = new ArrayList<Integer>(Collections.nCopies(251, 0));
+					ArrayList<Integer> newDocsRow = new ArrayList<Integer>(Collections.nCopies(202, 0));
 					newDocsRow.set(i,entry.getValue());
 					docTermFreq.put(entry.getKey(), newDocsRow);
 				}
