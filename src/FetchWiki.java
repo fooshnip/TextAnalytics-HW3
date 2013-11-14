@@ -38,8 +38,8 @@ public class FetchWiki {
 					String countryname = country.select("b>a").attr("title");
 					if(countrylink != ""){
 						Document countrydoc = Jsoup.connect(countrylink).timeout(30000000).get();
-						countrydoc = new Cleaner(Whitelist.simpleText()).clean(countrydoc);
-						String countrybody= countrydoc.body().text();
+						//countrydoc = new Cleaner(Whitelist.simpleText()).clean(countrydoc);
+						String countrybody= countrydoc.select("p").text();
 						Element capital = itd.next();
 						Iterator<Element> CapitalElements = capital.select("a").iterator();
 						while(CapitalElements.hasNext()) {
@@ -47,8 +47,9 @@ public class FetchWiki {
 							String capitallink = e.attr("abs:href");
 							String capitalname = e.attr("title");
 							Document capitaldoc = Jsoup.connect(capitallink).timeout(30000000).get();
-							capitaldoc = new Cleaner(Whitelist.simpleText()).clean(capitaldoc);
-							String capitalbody=capitaldoc.body().text();
+							
+							String capitalbody=capitaldoc.select("p").text();
+							//capitalbody = new Cleaner(Whitelist.simpleText()).clean(capitalbody);
 							// now pass the data
 							System.out.println(Continent[ContiIter]+"\t"+countryname+"\n"+countrybody+"\n"+capitalname+"\n"+capitalbody+"\n\n");
 							store.AddContinent(row,Continent[ContiIter]);
