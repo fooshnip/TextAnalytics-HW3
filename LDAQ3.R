@@ -7,6 +7,7 @@
 
 # Load files
 TF = read.delim("~/workspace/TextAnalytics-HW3/termdoc.txt", header=F)
+TF = as.data.frame(apply(TF,2,function(x) iconv(enc2utf8(x), sub = "byte")))
 
 library(sqldf); 
 TF2 <- sqldf('select V1, sum(V2) as V2,  sum(V3) as V3,	
@@ -52,12 +53,18 @@ TF2 <- sqldf('select V1, sum(V2) as V2,  sum(V3) as V3,
              sum(V195) as V195,	sum(V196) as V196,	sum(V197) as V197,	sum(V198) as V198,	sum(V199) as V199,
              sum(V200) as V200,	sum(V201) as V201,	sum(V202) as V202,	sum(V203) as V203 from TF
              group by V1') #some values were duplicated - need to group
+TF2 <- TF2[-grep("[^[:alpha:]]",TF2$V1),]
+TF2 <- TF2[nchar(TF2$V1)>4,]
+TF2 <- TF2[(TF2$V1=="country")==FALSE,]
+TF2 <- TF2[(TF2$V1=="government")==FALSE,]
+TF2 <- TF2[(TF2$V1=="population")==FALSE,]
+TF2 <- TF2[(TF2$V1=="international")==FALSE,]
 
 rownames(TF2) = TF2[,1] #setting the terms as row names
 TF2 <- TF2[,-1] #removing the term to calculate sums over all documents
 TermTotalFreq = rowSums(TF2) #creating the term total frequency vector
 
-MainTerms = names(TermTotalFreq[TermTotalFreq > 300]) #1186 terms
+MainTerms = names(TermTotalFreq[TermTotalFreq > 200]) #1186 terms
 TF3=TF2[MainTerms,] 
 head(TF3)
 

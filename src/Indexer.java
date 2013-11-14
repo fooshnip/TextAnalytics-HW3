@@ -51,7 +51,7 @@ public class Indexer {
         this.store = store;
         String indexDir = "C:/Users/Riles/Text3/index";
         Directory dir = FSDirectory.open(new File(indexDir));
-        IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_45, analyzer);
+        IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_45, new EnglishAnalyzer(Version.LUCENE_45));
         writer = new IndexWriter(dir, config);
         }
 

@@ -18,7 +18,7 @@ import java.util.Iterator;
  */
 public class FetchWiki {
 
-	String[] Continent = {"Africa","Asia","Europe","North America","South America","Oceania","Antarctica"};
+	String[] Continent = {"Africa","Asia","Europe","NorthAmerica","SouthAmerica","Oceania","Antarctica"};
 	WikiData store;
 	public FetchWiki() {
 		try {
@@ -41,21 +41,19 @@ public class FetchWiki {
 						//countrydoc = new Cleaner(Whitelist.simpleText()).clean(countrydoc);
 						String countrybody= countrydoc.select("p").text();
 						Element capital = itd.next();
-						Iterator<Element> CapitalElements = capital.select("a").iterator();
-						while(CapitalElements.hasNext()) {
-							Element e = CapitalElements.next();
-							String capitallink = e.attr("abs:href");
-							String capitalname = e.attr("title");
-							Document capitaldoc = Jsoup.connect(capitallink).timeout(30000000).get();
-							
-							String capitalbody=capitaldoc.select("p").text();
-							//capitalbody = new Cleaner(Whitelist.simpleText()).clean(capitalbody);
-							// now pass the data
-							System.out.println(Continent[ContiIter]+"\t"+countryname+"\n"+countrybody+"\n"+capitalname+"\n"+capitalbody+"\n\n");
-							store.AddContinent(row,Continent[ContiIter]);
-							store.AddCountry(row,countryname,countrybody);
-							store.AddCapital(row,capitalname,capitalbody);
-						}
+						Element CapitalElements = capital.select("a").first();
+						String capitallink = CapitalElements.attr("abs:href");
+						String capitalname = CapitalElements.attr("title");
+						Document capitaldoc = Jsoup.connect(capitallink).timeout(30000000).get();
+
+						String capitalbody=capitaldoc.select("p").text();
+						//capitalbody = new Cleaner(Whitelist.simpleText()).clean(capitalbody);
+						// now pass the data
+						System.out.println(Continent[ContiIter]+"\t"+countryname+"\n"+countrybody+"\n"+capitalname+"\n"+capitalbody+"\n\n");
+						store.AddContinent(row,Continent[ContiIter]);
+						store.AddCountry(row,countryname,countrybody);
+						store.AddCapital(row,capitalname,capitalbody);
+
 						row++;
 
 					}

@@ -1,4 +1,5 @@
 
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
@@ -33,7 +34,7 @@ public class Problem2Driver {
         String indexDir = "C:/Users/Riles/Text3/index"; // where index is located.
         Directory dir = FSDirectory.open(new File(indexDir));
         IndexSearcher is = new IndexSearcher(DirectoryReader.open(dir));
-        StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_45);
+        EnglishAnalyzer analyzer = new EnglishAnalyzer(Version.LUCENE_45);
         // defining the query parser to search items by title field.
         QueryParser ContinentParser = new QueryParser(Version.LUCENE_45, "Continent", analyzer);
         QueryParser CountryNameParser = new QueryParser(Version.LUCENE_45, "CountryName", analyzer);
@@ -46,7 +47,7 @@ public class Problem2Driver {
         BooleanCapitalSearch(is,CapitalTextParser);
         FuzzyCapitalSearch(is,CapitalTextParser);
         PhraseCapitalSearch(is,CapitalTextParser);
-        NumericRangeCapitalSearch(is,CapitalTextParser);
+        BooleanWarSearch(is,CapitalTextParser);
 
     }
 
@@ -55,9 +56,9 @@ public class Problem2Driver {
         BufferedWriter writer = new BufferedWriter(new FileWriter(f));
 
         BooleanQuery bool = new BooleanQuery();
-        bool.add(new TermQuery(new Term("CapitalText", "dinosaur")), BooleanClause.Occur.MUST);
-        //bool.add(new TermQuery(new Term("CapitalText", "Roman")), BooleanClause.Occur.MUST);
-        //bool.add(new TermQuery(new Term("CapitalText", "Persian")), BooleanClause.Occur.MUST_NOT);
+        bool.add(new TermQuery(new Term("CapitalText", "greek")), BooleanClause.Occur.MUST);
+        bool.add(new TermQuery(new Term("CapitalText", "roman")), BooleanClause.Occur.MUST);
+        bool.add(new TermQuery(new Term("CapitalText", "persian")), BooleanClause.Occur.MUST_NOT);
         System.out.println("Boolean =>\t"+bool.toString());
         Query query = CapitalTextParser.parse(bool.toString());
 
@@ -101,6 +102,7 @@ public class Problem2Driver {
 
         String SearchPhrase = "located below sea level";
         PhraseQuery phrase = new PhraseQuery();
+        phrase.setSlop(5);
         for (String s: SearchPhrase.split("\\s")) {
             phrase.add(new Term("CapitalText",s));
         }
@@ -117,26 +119,20 @@ public class Problem2Driver {
         writer.close();
     }
 
-    public static void NumericRangeCapitalSearch(IndexSearcher is, QueryParser CapitalTextParser) throws IOException, ParseException {
-        /* Brief introduction of Numeric Range Query and how it works.
-         * http://lucene.apache.org/core/4_3_0/core/org/apache/lucene/search/NumericRangeQuery.html
-         */
-        File f = new File("C:/Users/Riles/Text3/Search_Result/NumericRangeQueryResult.txt");
+    public static void BooleanWarSearch(IndexSearcher is, QueryParser CountryTextParser) throws IOException, ParseException {
+        File f = new File("C:/Users/Riles/Text3/Search_Result/FIFAPhraseResult.txt");
         BufferedWriter writer = new BufferedWriter(new FileWriter(f));
 
-        /*
-         * public static NumericRangeQuery<Long> newLongRange(String field,
-         *                          int precisionStep,
-         *                          Long min,
-         *                          Long max,
-         *                          boolean minInclusive,
-         *                          boolean maxInclusive)
-         */
-        NumericRangeQuery numer = NumericRangeQuery.newFloatRange("CapitalText", 4.6f, 4.7f, true, true); // range = [4.6,4.7]
-        System.out.println("NumericRange =>\t"+numer.toString());
-        Query query = CapitalTextParser.parse(numer.toString());
+        String SearchPhrase = "fifa world cup";
+        PhraseQuery phrase = new PhraseQuery();
+        phrase.setSlop(5);
+        for (String s: SearchPhrase.split("\\s")) {
+            phrase.add(new Term("CapitalText",s));
+        }
+        System.out.println("Phrase =>\t"+phrase.toString());
+        Query query = CountryTextParser.parse(phrase.toString());
 
-        int numResults = 100;
+        int numResults = 202;
         ScoreDoc[] hits =   is.search(query,numResults).scoreDocs;
         for (int i = 0; i < hits.length; i++) {
             Document doc = is.doc(hits[i].doc);
